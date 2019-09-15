@@ -7,7 +7,7 @@ const username = document.getElementsByClassName("username-container")[0]
 const name = document.getElementsByClassName("name-container")[0]
 const bio = document.getElementsByClassName("bio-container")[0]
 const repositories = document.getElementsByClassName("repositories-container")[0]
-const errorBox = document.getElementsByClassName("error-message")[0]
+const searchBoxErrorMsg = document.getElementsByClassName("search-box_error-msg")[0]
 
 // API infos
 
@@ -24,17 +24,25 @@ const GetUsers = async(user) => {
 }
 
 const showUsers = () => {
+ let errorBox = document.getElementsByClassName("error-box")[0]
+
   GetUsers(inputValue.value).then((res) => {
-    if (res.data.message === "Not Found") {
-      errorBox.appendChild(document.createTextNode(`Gah, it's not working!`))
-      return
-    } else {
-      name.innerHTML = `Name : <span>${res.data.name}</span>`
-      username.innerHTML = `Username : <span>${res.data.login}</span>`
-      bio.innerHTML = `Bio : <span>${res.data.bio}</span>`
-      repositories.innerHTML = `Number of repositories : <span>${res.data.public_repos}</span>`
-      repositories.appendChild(document.createElement("br"))
+    if (errorBox) {
+        searchBoxErrorMsg.removeChild(errorBox)
     }
+      if (res.data.message === "Not Found") {
+        let div = document.createElement('div')
+        div.textContent = "Does not exist"
+        div.setAttribute('class', 'error-box')
+        searchBoxErrorMsg.appendChild(div)
+        return
+      } else {
+        name.innerHTML = `Name : <span>${res.data.name}</span>`
+        username.innerHTML = `Username : <span>${res.data.login}</span>`
+        bio.innerHTML = `Bio : <span>${res.data.bio}</span>`
+        repositories.innerHTML = `Number of repositories : <span>${res.data.public_repos}</span>`
+        repositories.appendChild(document.createElement("br"))
+      }
   })
 }
 
