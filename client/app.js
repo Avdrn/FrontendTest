@@ -10,12 +10,23 @@ const img = document.getElementsByClassName("img-container")[0]
 const repositories = document.getElementsByClassName("repositories-container")[0]
 const searchBoxErrorMsg = document.getElementsByClassName("search-box_error-msg")[0]
 const app = document.getElementsByClassName("app")[0]
+const userInfoRepos = document.getElementsByClassName("user-info_repo")[0]
+
 
 // API infos
 
 const client_id = "Iv1.ac9d51bedd230a1f"
 const client_secret = "524701ddf0dd063868dd7af0a9dc5fe06e0dcb9b"
 const url = "https://api.github.com"
+
+// Delet or hide all children
+
+function deleteChildren(parent) {
+  let myNode = document.getElementsByClassName(parent)[0]
+   while (myNode.firstChild) {
+   myNode.removeChild(myNode.firstChild)
+  }   
+}
 
 // Get users and display info
 
@@ -26,17 +37,16 @@ const GetUsers = async(user) => {
 }
 
 const showUsers = () => {
-
   GetUsers(inputValue.value).then((res) => {
-
       if (res.data.message === "Not Found") {
+        userInfoRepos.style.visibility = "hidden"
         let div = document.createElement('div')
         div.textContent = "Does not exist"
         div.setAttribute('class', 'error-box')
         searchBoxErrorMsg.appendChild(div)
-        app.removeChild(userInfoContainer)
         return
       } else {
+        userInfoRepos.style.visibility = "visible"
         img.src = `${res.data.avatar_url}`
         name.innerHTML = `${res.data.name}`
         username.innerHTML = `@${res.data.login}`
@@ -125,5 +135,6 @@ searchBtn.onclick = function(){
    searchBoxErrorMsg.removeChild(errorBox)
  }
 
+ deleteChildren("repositories-container")
  showUsers()
 }
